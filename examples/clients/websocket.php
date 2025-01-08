@@ -15,12 +15,12 @@ use Swoole\Coroutine\Http\Client;
 
 use function Swoole\Coroutine\run;
 
-run(function () {
-    Coroutine::create(function () {
+run(function (): void {
+    Coroutine::create(function (): void {
         $client = new Client('server', 9504);
         $client->upgrade('/');
         $client->push('Swoole');
-        echo $client->recv()->data, PHP_EOL;
+        echo $client->recv()->data, PHP_EOL; // @phpstan-ignore property.nonObject
         $client->close();
     });
 });

@@ -20,13 +20,13 @@ use Swoole\Coroutine\Client;
 
 use function Swoole\Coroutine\run;
 
-run(function () {
+run(function (): void {
     foreach ([9505, 9507] as $port) {
-        Coroutine::create(function () use ($port) {
+        Coroutine::create(function () use ($port): void {
             $client = new Client(SWOOLE_TCP);
             $client->connect('server', $port);
             $client->send("client side message to port {$port}");
-            echo $client->recv(), PHP_EOL;
+            echo $client->recv(), PHP_EOL; // @phpstan-ignore echo.nonString
             $client->close();
         });
     }

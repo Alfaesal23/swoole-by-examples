@@ -15,15 +15,15 @@ use function Swoole\Coroutine\go;
 use function Swoole\Coroutine\run;
 
 run(
-    function () {
-        go(function () {
+    function (): void {
+        go(function (): void {
             $i = 0;
-            while (true) {
+            while (true) { // @phpstan-ignore while.alwaysTrue
                 echo $i++, PHP_EOL;
             }
         });
 
-        go(function () {
+        go(function (): never {
             throw new Exception('Quitting.');
         });
     }

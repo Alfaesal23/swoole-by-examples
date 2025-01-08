@@ -21,19 +21,24 @@ declare(strict_types=1);
  */
 
 use Swoole\Redis\Server;
+use Swoole\Table;
 
-$server       = new Server('0.0.0.0', 6379);
-$server->data = []; // We use an array as the data storage for the Redis server.
+// We use a Swoole table as the data storage for the Redis server.
+$table = new Table(1024);
+$table->column('value', Table::TYPE_STRING, 64);
+$table->create();
 
-$server->setHandler('SET', function (int $fd, array $data) use ($server) {
-    $server->data[$data[0]] = $data[1];
+$server = new Server('0.0.0.0', 6379);
+
+$server->setHandler('SET', function (int $fd, array $data) use ($server, $table): void {
+    $table->set($data[0], ['value' => $data[1]]);
     $server->send($fd, Server::format(Server::STATUS, 'OK'));
 });
 
-$server->setHandler('GET', function (int $fd, array $data) use ($server) {
+$server->setHandler('GET', function (int $fd, array $data) use ($server, $table): void {
     $key = $data[0];
-    if (array_key_exists($key, $server->data)) {
-        $server->send($fd, Server::format(Server::STRING, $server->data[$key]));
+    if ($table->exist($key)) {
+        $server->send($fd, Server::format(Server::STRING, $table->get($key)['value'])); // @phpstan-ignore offsetAccess.nonOffsetAccessible
     } else {
         $server->send($fd, Server::format(Server::NIL));
     }

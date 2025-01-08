@@ -54,16 +54,16 @@ Coroutine::set(
     ]
 );
 
-run(function () {
+run(function () use ($totalCoroutines, $startTime): void {
     for ($i = $totalCoroutines; $i--;) {
-        go(function () {
+        go(function (): void {
             sleep(5);
         });
 
         if (($i % 100_000) === 0) {
             printf(
                 '%07d active coroutines; total time: %f seconds; memory usage: %d.' . PHP_EOL,
-                count(Coroutine::listCoroutines()),
+                count(Coroutine::listCoroutines()), // @phpstan-ignore argument.type
                 microtime(true) - $startTime,
                 memory_get_usage()
             );

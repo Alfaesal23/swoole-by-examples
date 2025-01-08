@@ -21,11 +21,11 @@ use Swoole\Coroutine;
 Coroutine::set(
     [
         Constant::OPTION_EXIT_CONDITION => function () {
-            return Coroutine::stats()['coroutine_num'] === 0;
+            return Coroutine::stats()['coroutine_num'] === 0; // @phpstan-ignore offsetAccess.nonOffsetAccessible
         },
     ]
 );
-Coroutine::create(function () {
+Coroutine::create(function (): void {
     echo '1', PHP_EOL; // This will be printed out.
     Coroutine::yield();
     echo '3', PHP_EOL; // This will never be printed out.

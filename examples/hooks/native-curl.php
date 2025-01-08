@@ -31,9 +31,9 @@ use function Swoole\Coroutine\run;
 // flag SWOOLE_HOOK_NATIVE_CURL included already.
 Coroutine::set([Constant::OPTION_HOOK_FLAGS => SWOOLE_HOOK_NATIVE_CURL]);
 
-run(function () {
+run(function (): void {
     for ($i = 0; $i < 3; $i++) {
-        go(function () {
+        go(function (): void {
             $mh = curl_multi_init();
 
             $handlers = [];
@@ -41,7 +41,7 @@ run(function () {
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, 'http://server:9501?sleep=2');
                 curl_setopt($ch, CURLOPT_HEADER, false);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
                 curl_multi_add_handle($mh, $ch);
                 $handlers[] = $ch;

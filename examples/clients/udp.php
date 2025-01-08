@@ -17,10 +17,10 @@ use Swoole\Client;
 
 use function Swoole\Coroutine\run;
 
-run(function () {
+run(function (): void {
     $client = new Client(SWOOLE_SOCK_UDP, SWOOLE_SOCK_SYNC);
     $client->connect('server', 9506);
     $client->send('Hello Swoole!');
-    echo $client->recv(), PHP_EOL;
+    echo $client->recv(), PHP_EOL; // @phpstan-ignore echo.nonString
     $client->close();
 });

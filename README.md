@@ -41,7 +41,7 @@ docker compose exec -ti client bash # Get a Bash shell in the client container.
         * [This example](https://github.com/deminy/swoole-by-examples/blob/master/examples/io/blocking-vs-non-blocking.php) shows how the _return_ statement is treated differently in Swoole. As you can see in the example, a function call could return a value back first before finishing its execution.
     * coroutines
         * create coroutines
-            * use different callbacks to create coroutines
+            * [use different types of callbacks when creating coroutines](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/coroutines/creation-2.php)
             * [use different functions/methods to create coroutines](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/coroutines/creation-1.php)
         * enable coroutines
         * [coroutines in a for loop](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/coroutines/for.php)
@@ -55,18 +55,23 @@ docker compose exec -ti client bash # Get a Bash shell in the client container.
         * [class \Swoole\Coroutine\WaitGroup](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/waitgroup.php) (like [the WaitGroup type in Golang](https://golang.org/pkg/sync/#WaitGroup))
     * [defer](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/defer.php)
     * runtime hooks
+        * [configure and utilize different runtime hook flags in Swoole](https://github.com/deminy/swoole-by-examples/blob/master/examples/hooks/hook-flags.php)
         * curl. There are two different ways to hook curl functions:
             * [Option SWOOLE_HOOK_NATIVE_CURL](https://github.com/deminy/swoole-by-examples/blob/master/examples/hooks/native-curl.php) (recommended)
             * [Option SWOOLE_HOOK_CURL](https://github.com/deminy/swoole-by-examples/blob/master/examples/hooks/curl.php): This approach is implemented through [Swoole Library](https://github.com/swoole/library); however, it doesn't work for _curl_multi_*_ functions.
-        * MySQL
+        * The `mysqli` extension.
             * [hook _mysqli_ functions](https://github.com/deminy/swoole-by-examples/blob/master/examples/hooks/mysqli.php)
-            * [hook _PDO MySQL_ functions](https://github.com/deminy/swoole-by-examples/blob/master/examples/hooks/pdo_mysql.php)
+        * The `PDO` (PHP Data Objects) extension.
+            * [hook _PDO MySQL_ functionsaccess MySQL databases](https://github.com/deminy/swoole-by-examples/blob/master/examples/hooks/pdo_mysql.php)
+            * [hook _PDO_PGSQL_ functions to access PostgreSQL databases](https://github.com/deminy/swoole-by-examples/blob/master/examples/hooks/pdo_pgsql.php)
+            * [hook _PDO_SQLITE_ functions to access SQLite 3 databases](https://github.com/deminy/swoole-by-examples/blob/master/examples/hooks/pdo_sqlite.php)
     * deadlocks
         * examples on deadlocks
             * [pop data from an empty channel](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/an-empty-channel.php)
             * [push data to a full channel](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/channel-is-full.php)
             * [try to lock a locked file while the existing lock never gets released](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/file-locking.php)
             * [acquire a locked lock from another coroutine](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/swoole-lock.php)
+            * [improperly shutdown or reload a server](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/server-shutdown.php)
             * When the only coroutine yields its execution. The examples are shown in the next section when we talk about `How to detect/handle deadlocks`.
         * How to detect/handle deadlocks. In the following examples, we trigger deadlocks by yielding the execution of the only coroutine in the program.
             * [show deadlock information (the default behavior)](https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/coroutine-yielded-1.php)
@@ -112,6 +117,7 @@ docker compose exec -ti client bash # Get a Bash shell in the client container.
         * [timer](https://github.com/deminy/swoole-by-examples/blob/master/examples/timer/timer.php)
             * There is [a 2nd example](https://github.com/deminy/swoole-by-examples/blob/master/examples/timer/coroutine-style.php) included to show how to implement timer using coroutines only.
             * To see how to setup cronjobs using the _\Swoole\Timer_ class in an application server, please check [integrated HTTP/1 server](https://github.com/deminy/swoole-by-examples/blob/master/examples/servers/http1-integrated.php).
+    * cronjobs
     * benchmark
         * base mode vs multi-process mode
     * advanced topics
@@ -124,6 +130,7 @@ docker compose exec -ti client bash # Get a Bash shell in the client container.
             * [support HTTP/1, HTTP/2, and WebSocket on same port](https://github.com/deminy/swoole-by-examples/blob/master/examples/servers/mixed-protocols-1.php)
             * support multiple protocols on same server
         * [DDoS protection](https://github.com/deminy/swoole-by-examples/blob/master/examples/servers/ddos-protection.php): How to protect your Swoole-based application server from DDoS attacks.
+        * [interruptible sleep](https://github.com/deminy/swoole-by-examples/blob/master/examples/servers/interruptible-sleep.php): This example shows how to set up a cronjob in a web server, and allow the cronjob to execute at a last time when the server is shutting down.
         * multiple ports listening
 * client-side programming
     * [HTTP/1 client](https://github.com/deminy/swoole-by-examples/blob/master/examples/clients/http1.php)
@@ -131,8 +138,9 @@ docker compose exec -ti client bash # Get a Bash shell in the client container.
     * [WebSocket client](https://github.com/deminy/swoole-by-examples/blob/master/examples/clients/websocket.php)
     * [TCP client](https://github.com/deminy/swoole-by-examples/blob/master/examples/clients/tcp.php)
     * [UDP client](https://github.com/deminy/swoole-by-examples/blob/master/examples/clients/udp.php)
-    * [PostgreSQL client](https://github.com/deminy/swoole-by-examples/blob/master/examples/clients/postgresql.php)
 * miscellaneous topics
+    * data management in Swoole: globals, persistence, and caching
+        * [APCu caching]: APCu caching in Swoole works the same way as in other PHP CLI applications. This example explains it in details.
     * atomic counters
         * [implement atomic counters using unsigned 32-bit integers](https://github.com/deminy/swoole-by-examples/blob/master/examples/misc/atomic-counter-unsigned-32-bit.php)
         * [implement atomic counters using signed 64-bit integers](https://github.com/deminy/swoole-by-examples/blob/master/examples/misc/atomic-counter-signed-64-bit.php)
@@ -141,3 +149,5 @@ docker compose exec -ti client bash # Get a Bash shell in the client container.
         * process pool
             * pool creation and inter-process communication: Please check previous section `resource pooling` for details.
             * detach processes from a process pool
+
+[APCu Caching]: https://github.com/deminy/swoole-by-examples/blob/master/examples/servers/apcu-caching.php

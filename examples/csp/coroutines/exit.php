@@ -16,10 +16,10 @@ declare(strict_types=1);
 
 use function Swoole\Coroutine\run;
 
-run(function () {
+run(function (): void {
     try {
         exit(911);
-    } catch (Swoole\ExitException $e) {
+    } catch (Swoole\ExitException $e) { // @phpstan-ignore catch.neverThrown
         echo <<<EOT
         Calling exit() inside a coroutine throws out a \\Swoole\\ExitException exception instead of terminating code execution
         directly.

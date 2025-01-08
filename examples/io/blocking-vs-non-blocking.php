@@ -23,9 +23,9 @@ use Swoole\Coroutine;
 
 use function Swoole\Coroutine\go;
 
-function blocking()
+function blocking(): string
 {
-    go(function () {
+    go(function (): void {
         echo '1';
         sleep(2); // Although running inside a coroutine, the sleep() function call is still executed in blocking mode (when not hooked).
         echo '2';
@@ -33,9 +33,9 @@ function blocking()
     return '3';
 }
 
-function nonBlocking()
+function nonBlocking(): string
 {
-    go(function () {
+    go(function (): void {
         echo '4';
         Coroutine::sleep(2); // This is the non-blocking version of the sleep() function call.
         echo '6', PHP_EOL;
